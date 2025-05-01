@@ -24,6 +24,26 @@ export function GiphyGrid({ query }: { query: string }) {
         threshold: 5,
     });
 
+    const handleShare = async (gif: GiphyGif) => {
+        const shareUrl = gif.images.original.url;
+
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: gif.title,
+                    text: "Check out this GIF!",
+                    url: shareUrl,
+                });
+            } else {
+                await navigator.clipboard.writeText(shareUrl);
+                alert("GIF URL copied to clipboard!");
+            }
+        } catch (err) {
+            console.error("Share failed:", err);
+        }
+    };
+
+
     const renderCard = ({ data }: { data: GiphyGif }) => (
         <Card
             key={data.id}
@@ -42,7 +62,7 @@ export function GiphyGrid({ query }: { query: string }) {
                         <Button size="sm" variant="ghost" className="text-white px-2 py-1">
                             ❤️
                         </Button>
-                        <Button size="sm" variant="ghost" className="text-white px-2 py-1">
+                        <Button onClick={() => handleShare(data)} size="sm" variant="ghost" className="text-white px-2 py-1">
                             🔗
                         </Button>
                     </div>
