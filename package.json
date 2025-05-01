@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:ui": "vitest --ui",
-    "start": "node server.js",
+    "start": "serve -s dist",
     "postinstall": "vite build"
   },
   "dependencies": {
