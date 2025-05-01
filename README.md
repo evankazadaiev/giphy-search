@@ -1,54 +1,71 @@
-# React + TypeScript + Vite
+# 🪄 Giphy Search
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A fast, responsive, and testable React app for discovering trending and searchable GIFs using the Giphy API.
 
-Currently, two official plugins are available:
+🌐 **[Live Demo](https://giphy-search-bb4e84c88b24.herokuapp.com/?q=dogs)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<img
+src="https://github.com/user-attachments/assets/37a0e407-6ab3-48ec-a386-3566c44c87b1"
+width="400"
+style="border-radius: 12px; margin-right: 10px; overflow: hidden;"
+/>
+<img
+src="https://github.com/user-attachments/assets/7fcbaac5-6747-49c4-a771-15e2b9b067aa"
+width="400"
+style="border-radius: 12px; overflow: hidden;"
+/>
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## ✨ Features
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- 🔍 **Search any GIF** by keyword or phrase
+- 🔥 **Discover trending GIFs** with no input
+- ⚡️ **Lazy loading & virtualization** for infinite scroll performance
+- 📤 **Share-friendly** interface
+- 🎯 Keyboard-friendly search box with autocompletion
+- 💾 **In-memory caching** for previously fetched results (Can be easily substituted by other source of cache)
+- 🔬 **Fully testable** architecture using `vitest`, `@testing-library/react`, and `ts-mockito`
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ✨ Architecture & Design
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+### ♻️ Hook-based Data Layer
+
+- Built around a custom `useGiphySearch` hook that:
+    - Manages loading state, pagination, and query changes
+    - Uses `AbortController` to cancel stale requests mid-flight
+  
+- Abstracted with the **Repository Pattern** via a `giphyRepository` module, allowing easy substitution of data sources (e.g. REST API, GraphQL, mock service, or static fixtures for testing)
+
+### 🧱 Feature-based Modular Architecture
+
+- Follows a **feature-first** folder structure under `features/giphy`, where each feature encapsulates its:
+    - UI components
+    - Hooks and state
+    - Domain logic and types
+    - DI setup and API integration
+
+### ⚙️ Tech Stack
+
+| Tool                 | Purpose                             |
+|----------------------|-------------------------------------|
+| `Vite`               | Ultra-fast dev/build toolchain      |
+| `React 18`           | Component library                   |
+| `React Router v7`    | Client-side routing                 |
+| `masonic`            | High-perf masonry layout            |
+| `@testing-library/react` | Declarative test framework     |
+| `Vitest`             | Blazing fast unit testing           |
+| `ts-mockito`         | Type-safe mocking for unit tests    |
+| `Heroku`             | Deployment target                   |
+
+---
+
+## 🚀 Running Locally
+
+```bash
+npm install
+npm run dev         # start dev server
+npm run build       # build production bundle
+npm run preview     # preview built version locally
