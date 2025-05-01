@@ -31,12 +31,7 @@ style="border-radius: 12px; overflow: hidden;"
 
 ## ✨ Architecture & Design
 
-### ♻️ Hook-based Data Layer
-
-- Built around a custom `useGiphySearch` hook that:
-    - Manages loading state, pagination, and query changes
-    - Uses `AbortController` to cancel stale requests mid-flight
-  
+### ♻️ Data Layer
 - Abstracted with the **Repository Pattern** via a `giphyRepository` module, allowing easy substitution of data sources (e.g. REST API, GraphQL, mock service, or static fixtures for testing)
 
 ### 🧱 Feature-based Modular Architecture
