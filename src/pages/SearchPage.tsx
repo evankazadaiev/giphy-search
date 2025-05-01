@@ -17,12 +17,17 @@ export default function SearchPage() {
         giphyRepository.fetchTrendingSearchTerms().then(setTrendingTags).catch(console.error);
     }, []);
 
-    const handleQueryChange = (newQuery: string, newPage = 1) => {
-        const next = new URLSearchParams(searchParams);
-        next.set("q", newQuery);
-        next.set("page", String(newPage));
-        setSearchParams(next);
+    const handleQueryChange = (newQuery: string) => {
+        const url = new URLSearchParams(searchParams);
+        url.set("q", newQuery);
+        setSearchParams(url);
     };
+
+    const [gridRetriggerQuery, setGridRetriggerQuery] = useState(query);
+
+    useEffect(() => {
+        setGridRetriggerQuery(query);
+    }, [query]);
 
     return (
         <div className="min-h-screen bg-zinc-900 text-white flex flex-col">
@@ -49,7 +54,7 @@ export default function SearchPage() {
 
             <div className="flex-1 overflow-y-auto px-4 py-6">
                 <div className="max-w-6xl mx-auto">
-                    <GiphyGrid query={query} />
+                    <GiphyGrid key={gridRetriggerQuery} query={gridRetriggerQuery} />
                 </div>
             </div>
         </div>

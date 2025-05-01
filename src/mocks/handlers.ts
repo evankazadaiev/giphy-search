@@ -14,12 +14,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 const gifSources = [test, test2, test3, test4];
 
+const TOTAL_GIFS = 100;
 const TRENDING_TAGS = ["dogs", "cats", "funny", "dance", "meme", "reaction"];
 
 function generateMockGifs(): GiphyGif[] {
-    return Array.from({ length: 12 }).map((_, i) => ({
+    return Array.from({ length: TOTAL_GIFS }).map((_, i) => ({
         id: uuidv4(),
-        title: `Mock GIF ${i}`,
+        title: `Mock GIF ${uuidv4()}`,
         url: '',
         source: '',
         images: {
@@ -66,7 +67,7 @@ export const handlers = [
         const response: GiphySearchResponseData = {
             data: shuffled,
             pagination: {
-                total_count: 100,
+                total_count: TOTAL_GIFS,
                 count: shuffled.length,
                 offset,
             },

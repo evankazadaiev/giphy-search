@@ -4,14 +4,16 @@ import {
     Command,
     CommandEmpty,
     CommandGroup,
+    CommandInput,
     CommandItem,
     CommandList,
 } from "./command"
 import { cn } from "@/common/lib/utils"
-import {Input} from "@/common/components/ui/input.tsx";
+
+export type Option = { value: string; label: string }
 
 type ComboboxInputProps = {
-    items: { value: string; label: string }[]
+    items: Option[]
     value: string
     onValueChange: (val: string) => void
     onInputChange?: (val: string) => void
@@ -27,52 +29,77 @@ export function ComboboxInput({
                                   placeholder = "Type to search...",
                                   className,
                               }: ComboboxInputProps) {
-    const [search, setSearch] = React.useState(value)
+    const inputRef = React.useRef<HTMLInputElement>(null)
+
     const [open, setOpen] = React.useState(false)
+    const [inputValue, setInputValue] = React.useState(() => {
+        const match = items.find((i) => i.value === value)
+        return match?.label || value
+    })
+
+    const selectedItem = items.find((item) => item.value === value)
 
     React.useEffect(() => {
-        setSearch(value)
-    }, [value])
+        const match = items.find((i) => i.value === value)
+        if (match?.label && match.label !== inputValue) {
+            setInputValue(match.label)
+        }
+    }, [value, items])
 
-    const filteredItems = items.filter((i) =>
-        i.label.toLowerCase().includes(search.toLowerCase())
+    const filteredItems = items.filter((item) =>
+        item.label.toLowerCase().includes(inputValue.toLowerCase())
     )
 
-    const handleChange = (val: string) => {
-        setSearch(val)
-        onInputChange?.(val)
-        setOpen(true)
-    }
-
-    const handleSelect = (val: string) => {
-        onValueChange(val)
-        setSearch(val)
+    const handleSelect = (item: Option) => {
+        setInputValue(item.label)
+        onInputChange?.(item.label)
+        onValueChange(item.value)
         setOpen(false)
+
+            inputRef.current?.blur()
     }
 
     return (
         <div className="relative w-full">
-            <Command shouldFilter={false}>
+            <Command
+                className="px-0"
+                shouldFilter={false}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        onInputChange?.(inputValue)
+                        onValueChange(inputValue)
+                        setOpen(false)
+                        inputRef.current?.blur()
+                    }
 
-                <Input
-                    value={search}
-                    onChange={(e) => handleChange(e.target.value)}
-                    onFocus={() => setOpen(true)}
-                    onBlur={() => setOpen(false)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            e.preventDefault()
-                            onValueChange(search) // simulate selecting the current input
+                    if (e.key === "Escape") {
+                        inputRef.current?.blur()
+                    }
+                }}
+            >
+                <div className="command-input-wrapper">
+                    <CommandInput
+                        ref={inputRef}
+                        value={inputValue}
+                        onValueChange={(val) => {
+                            setInputValue(val)
+                            onInputChange?.(val)
+                            setOpen(true)
+                        }}
+                        onFocus={() => setOpen(true)}
+                        onBlur={() => {
                             setOpen(false)
-                        }
-                    }}
-                    placeholder={placeholder}
-                    className={cn(
-                        "w-full px-4 py-2 rounded-md border border-border bg-background text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring",
-                        className
-                    )}
-                />
-
+                            if (selectedItem) {
+                                setInputValue(selectedItem.label)
+                            }
+                        }}
+                        placeholder={placeholder}
+                        className={cn(
+                            "command-input w-full px-3 py-2 rounded-md border border-border bg-background text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring",
+                            className
+                        )}
+                    />
+                </div>
                 {open && filteredItems.length > 0 && (
                     <div className="absolute top-full left-0 mt-1 w-full z-50 bg-popover border border-border rounded-md shadow-md max-h-60 overflow-auto">
                         <CommandList>
@@ -81,16 +108,16 @@ export function ComboboxInput({
                                 {filteredItems.map((item) => (
                                     <CommandItem
                                         key={item.value}
-                                        value={item.value}
-                                        onSelect={() => handleSelect(item.value)}
-                                        className="cursor-pointer px-4 py-2 hover:bg-muted"
+                                        value={item.label}
+                                        onMouseDown={(e) => e.preventDefault()}
+                                        onSelect={() => handleSelect(item)}
+                                        className="cursor-pointer px-4 py-2 hover:bg-muted flex items-center gap-2"
                                     >
-                                        <Check
-                                            className={cn(
-                                                "mr-2 h-4 w-4",
-                                                item.value === value ? "opacity-100" : "opacity-0"
-                                            )}
-                                        />
+                                        {selectedItem?.value === item.value ? (
+                                            <Check className="w-4 h-4" />
+                                        ) : (
+                                            <span className="w-4 h-4" />
+                                        )}
                                         {item.label}
                                     </CommandItem>
                                 ))}

@@ -80,6 +80,17 @@ h1 {
   line-height: 1.1;
 }
 
+.command-input-wrapper svg {
+  display: none !important;
+}
+
+.command-input-wrapper > :first-child {
+  padding-left: 0!important;
+  padding-right: 0!important;
+  border: 0!important;
+}
+
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;

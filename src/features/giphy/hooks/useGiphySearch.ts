@@ -55,6 +55,8 @@ export function useGiphySearch(query: string) {
             } catch (e) {
                 if ((e as Error).name !== 'AbortError') {
                     console.error('Giphy fetch failed:', e);
+                    setGifs([]);
+                    setHasMore(false);
                 }
             } finally {
                 setIsLoading(false);

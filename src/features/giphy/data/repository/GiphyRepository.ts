@@ -2,12 +2,12 @@ import {GiphyApiProxy} from "@/features/giphy/data/data_sources/api/GiphyApiProx
 import {
     GiphyMemoryCache,
 } from "@/features/giphy/data/data_sources/cache/GiphyMemoryCache.ts";
-import {ISearchDTO, ITrendingDTO} from "@/common/types/giphy/giphy";
+import {GiphySearchResponseData, ISearchDTO, ITrendingDTO} from "@/common/types/giphy/giphy";
 
 export class GiphyRepository {
     constructor(private api: GiphyApiProxy, private cache: GiphyMemoryCache) {}
 
-    async search(searchDTO: ISearchDTO, signal?: AbortSignal) {
+    async search(searchDTO: ISearchDTO, signal?: AbortSignal): Promise<GiphySearchResponseData> {
         try {
             const cached = this.cache.get(searchDTO.query, searchDTO.offset);
 
@@ -23,7 +23,7 @@ export class GiphyRepository {
         }
     }
 
-    async trending(trendingDTO: ITrendingDTO, signal?: AbortSignal) {
+    async trending(trendingDTO: ITrendingDTO, signal?: AbortSignal): Promise<GiphySearchResponseData> {
         try {
             const cached = this.cache.get("tranding", trendingDTO.offset);
 
