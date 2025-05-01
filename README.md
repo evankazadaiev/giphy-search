@@ -1,6 +1,6 @@
 # 🪄 Giphy Search
 
-A fast, responsive, and testable React app for discovering trending and searchable GIFs using the Giphy API.
+React app for discovering trending and searchable GIFs using the Giphy API.
 
 🌐 **[Live Demo](https://giphy-search-bb4e84c88b24.herokuapp.com/?q=dogs)**
 
