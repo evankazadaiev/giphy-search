@@ -11,6 +11,8 @@ export default function SearchPage() {
 
     const query = useMemo(() => searchParams.get("q") || "", [searchParams]);
 
+    console.log(query);
+
     const [trendingTags, setTrendingTags] = useState<string[]>([]);
 
     useEffect(() => {

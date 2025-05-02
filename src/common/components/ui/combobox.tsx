@@ -9,6 +9,7 @@ import {
     CommandList,
 } from "./command"
 import { cn } from "@/common/lib/utils"
+import {useEffect} from "react";
 
 export type Option = { value: string; label: string }
 
@@ -37,6 +38,10 @@ export function ComboboxInput({
         return match?.label || value
     })
 
+    useEffect(() => {
+        setInputValue(value);
+    }, [value]);
+
     const selectedItem = items.find((item) => item.value === value)
 
     React.useEffect(() => {
@@ -44,7 +49,7 @@ export function ComboboxInput({
         if (match?.label && match.label !== inputValue) {
             setInputValue(match.label)
         }
-    }, [value, items])
+    }, [value, items, inputValue])
 
     const filteredItems = items.filter((item) =>
         item.label.toLowerCase().includes(inputValue.toLowerCase())
@@ -56,7 +61,7 @@ export function ComboboxInput({
         onValueChange(item.value)
         setOpen(false)
 
-            inputRef.current?.blur()
+        inputRef.current?.blur()
     }
 
     return (

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { Button } from '@/common/components/ui/button';
 import { giphyRepository } from "@/features/giphy/di/di";
@@ -20,20 +20,13 @@ export function GiphySearchBox({
 }) {
     const [value, setValue] = useState(initialQuery);
     const [suggestions, setSuggestions] = useState<IGiphyAutocompleteOption[]>([]);
-    const skipSuggestion = useRef(false);
     const debouncedValue = useDebounce(value);
 
     useEffect(() => {
         setValue(initialQuery);
-        skipSuggestion.current = true;
     }, [initialQuery]);
 
     useEffect(() => {
-        if (skipSuggestion.current) {
-            skipSuggestion.current = false;
-            return;
-        }
-
         if (!debouncedValue.trim()) return setSuggestions([]);
 
         (async () => {
